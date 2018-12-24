@@ -1,0 +1,1444 @@
+{% extends 'base_test.html' %}
+{% load i18n %}
+{% load app_filters %}
+{% block additional-headers %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+    {#    <link href="/static/css/datepicker.css" rel="stylesheet">#}
+    {#    <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css"#}
+    {#          rel="stylesheet" type="text/css"/>#}
+
+    <link href="/static/css/calendar.min.css" rel="stylesheet" type="text/css"/>
+
+    <head>
+        <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    </head>
+    <style>
+
+        .ui.labeled.icon.button {
+            width: 121px;
+        }
+
+        .ui.grid>.row>.column {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 142px;
+    display: inline-grid;
+}
+
+        @media only screen and (max-width: 992px)
+        {
+            .ui.grid>.row>.column {
+            width: 50%;
+
+        }
+        }
+
+
+
+
+        @media only screen and (max-width: 1030px) {
+
+            .ui.labeled.icon.button {
+                width: 125% ;
+            }
+
+        }
+
+        @media only screen and (max-width: 986px) {
+
+            .ui.labeled.icon.button {
+               width:100%;
+                margin-top: 1em !important;
+
+            }
+
+        }
+
+
+
+
+        @media only screen and (max-width: 992px) {
+            #disease {
+                padding-left: 19%;
+            }
+
+            #operation {
+                padding-left: 19%;
+            }
+
+            #fertilization {
+                padding-left: 19%;
+            }
+
+            #seed {
+               padding-left: 19%;
+            }
+
+            #others {
+                padding-left: 19%;
+            }
+
+            #harvest {
+                padding-left: 19%;
+            }
+
+            #marketing {
+                padding-left: 19%;
+            }
+        }
+
+        @media only screen and (max-width: 992px)
+        {
+            #disease {
+                padding-left: 29%;
+            }
+
+            #operation {
+                padding-left: 29%;
+            }
+
+            #fertilization {
+                padding-left: 29%;
+            }
+
+            #seed {
+               padding-left: 29%;
+            }
+
+            #others {
+                padding-left: 29%;
+            }
+
+            #harvest {
+                padding-left: 29%;
+            }
+
+            #marketing {
+                padding-left: 29%;
+            }
+        }
+
+        @media only screen and (max-width: 600px)
+        {
+            #disease {
+                padding-left: 20%;
+            }
+
+            #operation {
+                padding-left: 20%;
+            }
+
+            #fertilization {
+                padding-left: 20%;
+            }
+
+            #seed {
+               padding-left: 20%;
+            }
+
+            #others {
+                padding-left: 20%;
+            }
+
+            #harvest {
+                padding-left: 20%;
+            }
+
+            #marketing {
+                padding-left: 20%;
+            }
+        }
+
+        @media only screen and (max-width: 415px)
+        {
+            #disease {
+                padding-left: 2%;
+            }
+
+            #operation {
+                padding-left: 2%;
+            }
+
+            #fertilization {
+                padding-left: 2%;
+            }
+
+            #seed {
+               padding-left: 2%;
+            }
+
+            #others {
+                padding-left: 2%;
+            }
+
+            #harvest {
+                padding-left: 2%;
+            }
+
+            #marketing {
+                padding-left: 2%;
+            }
+        }
+
+        @media only screen and (max-width: 375px)
+        {
+            #disease {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #operation {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #fertilization {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #seed {
+               padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #others {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #harvest {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+
+            #marketing {
+                padding-left: 0%;
+                margin-left: -10px;
+            }
+        }
+
+
+
+
+
+        #disease {
+            padding-top: 10%;
+        }
+
+        #operation {
+            padding-top: 10%;
+        }
+
+        #fertilization {
+            padding-top: 10%;
+        }
+
+        #seed {
+            padding-top: 10%;
+        }
+
+        #others {
+            padding-top: 10%;
+        }
+
+        #harvest {
+            padding-top: 10%;
+        }
+
+        #marketing {
+            padding-top: 10%;
+        }
+
+
+    @media only screen and (max-width: 364px)
+        {
+            .ui.grid>.row>.column {
+            width: 100%;
+        }
+            #disease {
+                padding-left: 29%;
+            }
+
+            #operation {
+                padding-left: 29%;
+            }
+
+            #fertilization {
+                padding-left: 29%;
+            }
+
+            #seed {
+               padding-left: 29%;
+            }
+
+            #others {
+                padding-left: 29%;
+            }
+
+            #harvest {
+                padding-left: 29%;
+            }
+
+            #marketing {
+                padding-left: 29%;
+            }
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption"><i class="fa fa-adn"></i>Daily SAAO Service Trend</div>
+        </div>
+
+        <div class="portlet-body">
+
+            <div class="ui grid container">
+                {#            <div class="row ">#}
+                <div class="ui sixteen wide column grid doubling row">
+                    {#                        <div class="ui seven column grid doubling" style="padding-right: 0%; padding-left: 3%;">#}
+                    {#                        <div class="row">#}
+                    <div class="column seg" >
+                        <div class="ui segment ">
+                            <div class="ui top attached label" style="background-color: lightsteelblue"><h4><strong>Diseases & Pest</strong></h4></div>
+                            <div id="disease" style=""></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+
+                    </div>
+                    <div class="column seg">
+                        <div class="ui segment seg">
+                            <div class="ui top attached label " style="background-color: #EDC9AF"><h4><strong>I.C. Operation</strong></h4></div>
+                            <div id="operation"></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    <div class="column seg" >
+                        <div class="ui segment seg">
+                            <div class="ui top attached label" style="background-color: lightgreen"><h4><strong>Fertilization</strong>
+                            </h4>
+                            </div>
+                            <div id="fertilization" ></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    <div class="column seg" >
+                        <div class="ui segment seg">
+                            <div class="ui top attached label " style="background-color: #FDBCB4"><h4><strong>Seed, Seedling</strong></h4></div>
+                            <div id="seed" ></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    <div class="column seg" >
+                        <div class="ui segment seg">
+                            <div class="ui top attached label " style="background-color: #C0C0C0"><h4><strong>Others</strong></h4></div>
+                            <div id="others" ></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    <div class="column seg" >
+                        <div class="ui segment seg">
+                            <div class="ui top attached label " style="background-color: #80DAEB"><h4><strong>Harv. & Storage</strong></h4></div>
+                            <div id="harvest" ></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    <div class="column seg" >
+                        <div class="ui segment seg">
+                            <div class="ui top attached label " style="background-color: #D8BFD8"><h4><strong>Marketing</strong></h4></div>
+                            <div id="marketing" ></div>
+                            {#                                            <img class="ui wireframe image" src="/images/wireframe/paragraph.png">#}
+                        </div>
+                    </div>
+                    {#                        </div>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                </div>
+            </div>
+
+            <div class="ui grid stackable ">
+
+                <div class="row">
+
+                    <div class="eleven wide column" style="padding-top:.5%; padding-left: 3%; padding-right: 0%;">
+                        <br>
+                        <div id="container" style="width:100%; height:400px;"></div>
+                        <br><br><br><br><br><br>
+                    </div>
+                    <div class="five wide column">
+
+                        <div class="ui form">
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Start date</label>
+                                    <div class="ui calendar" id="rangestart">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" placeholder="Start">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>End date</label>
+                                    <div class="ui calendar" id="rangeend">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Division</label>
+                                    <select name="division" class="ui fluid  search selection dropdown icon" multiple=""
+                                            id="division">
+                                        <option value="">Division</option>
+                                        {% for div_id,div_name in division %}
+                                            <option value="{{ div_id }}">{{ div_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>District</label>
+                                    <select name="district" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="district" id="select">
+                                        <option value="">District</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Upazila</label>
+                                    <select name="upazila" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="upazila">
+                                        <option value="">Upazila</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Union</label>
+                                    <select name="union" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="union">
+                                        <option value="">Union</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Block</label>
+                                    <select name="block" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="block">
+                                        <option value="">Block</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>SAOO Name</label>
+                                    <select name="saoo_name" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="saoo_name"
+                                    >
+                                        <option value="">SAOO Name</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="ui labeled icon button" id="search">
+                                        <i class="search blue icon"></i>
+                                        Search
+                                    </button>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <form method="post"
+                                          action="/dashboardmodule/xls_report_creator_for_daily_saoo_service_trend/"
+                                          enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div id="divisions" hidden></div>
+                                        <div id="districts" hidden></div>
+                                        <div id="upazilas" hidden></div>
+                                        <div id="unions" hidden></div>
+                                        <div id="blocks" hidden></div>
+                                        <div id="saoo_names" hidden></div>
+                                        <div id="startdate" hidden></div>
+                                        <div id="enddate" hidden></div>
+
+                                        <button type="submit" class="ui labeled icon  button" data-original-title=""
+                                                title="" id="export"><i class="cloud download blue icon"></i>
+                                            Export
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block additional-javascript %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+    {#    <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>#}
+    <script type="text/javascript" src="/static/js/calendar.min.js"></script>
+    {#    <script type="text/javascript" src="/static/js/bootstrap-datepicker.js"></script>#}
+    <script>
+
+
+        $(document).ready(function () {
+
+
+            var name_of_crops = ['Aus Paddy', 'Aman Paddy', 'Boro Paddy', 'Soft Paddy', 'Kaun', 'Wheat', 'Maize', 'Jute', 'Mesta Jute', 'Potato & Seed Potatoes', 'Sweet Potato', 'Mustard', 'Soybean', 'Nut', 'Mung Beans', 'Lentils', 'Green Chili', 'Dry Chili', 'Coriander',
+                'Winter Vegetables', 'Summer Vegetables', 'Summer Tomatoes', 'Mango', 'Jackfruit', 'Guava', 'Jujube', 'Banana', 'Papaya', 'Others', '30'];
+
+            console.log(name_of_crops.length);
+            var seperate_categories = {{ seperate_categories |safe }}['seperate_categories'];
+            console.log(seperate_categories);
+            $('#division').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_district(value);
+                    }
+                }
+            );
+            $('#district').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_upazila(value);
+                    }
+                }
+            );
+            $('#upazila').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_union(value);
+                    }
+                }
+            );
+            $('#union').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+{#                        load_block(value);#}
+                        load_name(value);
+                    }
+                }
+            );
+            $('#block').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_name(value);
+                    }
+                }
+            );
+            $('#saoo_name').dropdown();
+
+            var today = new Date();
+            $('#rangestart').calendar({type: 'date', endCalendar: $('#rangeend')});
+            $('#rangestart').calendar("set date", new Date(today.getFullYear(), today.getMonth() - 1, today.getDate()));
+            $('#rangeend').calendar({type: 'date', startCalendar: $('#rangestart')});
+            $('#rangeend').calendar("set date", new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
+
+            $('#export').on("click", function () {
+                var division = value_filter($('#division').dropdown('get value'));
+                var district = value_filter($('#district').dropdown('get value'));
+                var upazila = value_filter($('#upazila').dropdown('get value'));
+                var union = value_filter($('#union').dropdown('get value'));
+                var block = value_filter($('#block').dropdown('get value'));
+                var saoo_name = value_filter($('#saoo_name').dropdown('get value'));
+                var startdate = $('#rangestart').calendar("get date");
+                var enddate = $('#rangeend').calendar("get date");
+                startdate = getFormattedDate(startdate);
+                enddate = getFormattedDate(enddate);
+                for (each in division)
+                    $('#divisions').append("<input name = \"divisions\" value=\"" + division[each] + "\" />");
+                for (each in district)
+                    $('#districts').append("<input name = \"districts\" value=\"" + district[each] + "\" />");
+                for (each in upazila)
+                    $('#upazilas').append("<input name = \"upazilas\" value=\"" + upazila[each] + "\" />");
+                for (each in union)
+                    $('#unions').append("<input name = \"unions\" value=\"" + union[each] + "\" />");
+                for (each in block)
+                    $('#blocks').append("<input name = \"blocks\" value=\"" + block[each] + "\" />");
+                for (each in saoo_name)
+                    $('#saoo_names').append("<input name = \"saoo_names\" value=\"" + saoo_name[each] + "\" />");
+                $('#startdate').html("<input name = \"startdate\" value=\"" + startdate + "\" />");
+                $('#enddate').html("<input name = \"enddate\" value=\"" + enddate + "\" />");
+            });
+
+            $('#search').on("click", function () {
+                var division = value_filter($('#division').dropdown('get value'));
+                var district = value_filter($('#district').dropdown('get value'));
+                var upazila = value_filter($('#upazila').dropdown('get value'));
+                var union = value_filter($('#union').dropdown('get value'));
+                var block = value_filter($('#block').dropdown('get value'));
+                var saoo_name = value_filter($('#saoo_name').dropdown('get value'));
+                var startdate = $('#rangestart').calendar("get date");
+                var enddate = $('#rangeend').calendar("get date");
+
+                startdate = getFormattedDate(startdate);
+                enddate = getFormattedDate(enddate);
+                console.log(division);
+                console.log(district);
+                console.log(upazila);
+                console.log(union);
+                console.log(block);
+                console.log(saoo_name);
+                console.log(startdate);
+                console.log(enddate);
+
+                $.ajax({
+                    url: '/dashboardmodule/data_filter/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'division': JSON.stringify(division),
+                        'district': JSON.stringify(district),
+                        'upazila': JSON.stringify(upazila),
+                        'union': JSON.stringify(union),
+                        'block': JSON.stringify(block),
+                        'saoo_name': JSON.stringify(saoo_name),
+                        'startdate': startdate,
+                        'enddate': enddate
+                    },
+                    beforeSend: function () {
+                        {#                    $("#container").html('<div class="alert alert-success">Please Wait...loading....</div>');#}
+                        $("#container").html('<div class="ui active inverted dimmer">\n' +
+                            '    <div class="ui text loader">Loading</div>\n' +
+                            '  </div>');
+
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        stack_chart(result['data']);
+                        pie_charts(result['seperate_categories']);
+                    }
+                });
+
+
+            });
+
+            function sortWithIndeces(toSort) {
+                for (var i = 0; i < toSort.length; i++) {
+                    toSort[i] = [toSort[i], i];
+                }
+                toSort.sort(function (left, right) {
+                    return left[0] < right[0] ? -1 : 1;
+                });
+                toSort.sortIndices = [];
+                for (var j = 0; j < toSort.length; j++) {
+                    toSort.sortIndices.push(toSort[j][1]);
+                    toSort[j] = toSort[j][0];
+                }
+                return toSort;
+            }
+
+
+            var categories = {{ categories |safe }};
+            var data = {{ data |safe }};
+
+            stack_chart(data);
+            pie_charts(seperate_categories);
+
+            function stack_chart(data) {
+
+                console.log(data);
+                result = new Array(30).fill(0);
+                for (s = 0; s < 30; s++) {
+                    for (i = 0; i < data.length; i++) {
+
+                        result[s] += data[i][s];
+                    }
+
+                }
+
+                //console.log(sortWithIndeces(result).sortIndices);
+
+                var index = sortWithIndeces(result).sortIndices;
+
+
+                console.log(index);
+                var res_data = new Array(7);
+                for (i = 0; i < 7; i++)
+                    res_data[i] = new Array(30);
+                for (i = 0; i < data.length; i++) {
+                    for (j = 0, s = 29; j < 30; j++, s--) {
+                        res_data[i][j] = data[i][index[s]];
+                    }
+                }
+
+                Highcharts.chart('container', {
+
+
+                    chart: {
+                        type: 'column',
+                        height: 540
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: name_of_crops,
+                        labels: {
+                            style: {
+                                fontWeight: 'bold',
+                            },
+                            rotation: 270
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Crop Wise Problem Identified'
+                        },
+                        stackLabels: {
+                            enabled: false,
+                            style: {
+                                fontWeight: 'bold',
+                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                            }
+                        }
+                    }
+                    ,
+
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                width: 770
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+                    ,
+
+
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'bottom',
+                        layout: 'horizontal'
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{point.x}</b><br/>',
+                        formatter: function () {
+                            return '<b>' + this.x + '</b><br/><b>' + this.series.name + '</b>: ' + Highcharts.numberFormat(this.y, 0) + ' %';
+                        }
+                        {#                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'#}
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: true,
+                                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                                rotation: 270,
+                                formatter: function () {
+                                    if (this.y > 1.3)
+                                        return Highcharts.numberFormat(this.y, 0) + "%";
+                                }
+                            }
+
+                        }
+                    },
+                    series: [{
+                        name: 'Diseases & Pest',
+                        data: res_data[3],
+                        color: '#0000FF'
+                    }, {
+                        name: 'I.C. Operation',
+                        data: res_data[2],
+                        color: '#8b4513'
+                    }, {
+                        name: 'Fertilization',
+                        data: res_data[1],
+                        color: '#32cd32'
+                    }, {
+                        name: 'Seed,Seedling',
+                        data: res_data[0],
+                        color: '#ee7600'
+                    }, {
+                        name: 'Others',
+                        data: res_data[6],
+                        color: '#2f4f4f'
+                    }, {
+                        name: 'Harv & Storage',
+                        data: res_data[4],
+                        color: '#008080'
+                    }, {
+                        name: 'Marketing',
+                        data: res_data[7],
+                        color: '#551a8b'
+                    }
+                    ]
+                });
+            }
+
+            function pie_charts(seperate_categories) {
+                //Disease Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'disease',
+                        type: 'pie',
+                        height: 107,
+                        width: 107,
+
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+
+                        text: precisionRound(seperate_categories[4] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+
+                        }
+                    }
+
+                    ,
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Disease', y: seperate_categories[4], color: '#0000FF'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[4],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+                //Operation Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'operation',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[3] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Operation', y: seperate_categories[3], color: '#8b4513'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[3],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+                //fertilization Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'fertilization',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[2] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Fertilization', y: seperate_categories[2], color: '#32cd32'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[2],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+
+                //seed Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'seed',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[1] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Seed', y: seperate_categories[1], color: '#ee7600'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[1],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+
+                //others Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'others',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[7] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Others', y: seperate_categories[7], color: '#2f4f4f'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[7],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+                //harvest Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'harvest',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[5] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        name: 'Browsers',
+                        data: [{'name': 'Harvest', y: seperate_categories[5], color: '#008080'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[5],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+
+
+                //marketing Chart
+                Highcharts.chart({
+                    chart: {
+                        renderTo: 'marketing',
+                        type: 'pie',
+                        height: 107,
+                        width: 107
+                    },
+                    exporting: {
+                        enabled: false
+                    }, credits: {
+                        enabled: false
+                    },
+                    title: {
+                        text: precisionRound(seperate_categories[6] * 10, 0) + "%",
+                        x: 0,
+                        y: 8,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            if (this.point.name != 'blank')
+                                return '<b>' + this.point.name + '</b>: ' + precisionRound(this.y * 10, 0) + ' %';
+                            else return false;
+                        }
+                    },
+                    series: [{
+                        data: [{'name': 'Marketing', y: seperate_categories[6], color: '#551a8b'}, {
+                            'name': 'blank',
+                            y: 10 - seperate_categories[6],
+                            color: '#d3d3d3'
+                        }],
+                        size: '170%',
+                        innerSize: '50%',
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+            }
+
+
+            function getDesiredDate(n) {
+                var today = new Date();
+                var n_month_before_today = new Date(today);
+                n_month_before_today.setMonth((today.getMonth() + 1) - n);
+                var dd = n_month_before_today.getDate();
+                var mm = n_month_before_today.getMonth() + 1;
+
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                var yyyy = n_month_before_today.getFullYear();
+                {#                formatted_date = yyyy + '-' + mm + '-' + dd;#}
+                formatted_date = dd + '/' + mm + '/' + yyyy;
+                return formatted_date;
+
+            }
+
+            function getFormattedDate(date) {
+                var yy = date.getFullYear();
+                var mm = date.getMonth() + 1;
+                var dd = date.getDate();
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                {#                formatted_date = yyyy + '-' + mm + '-' + dd;#}
+                formatted_date = yy + '-' + mm + '-' + dd;
+                return formatted_date;
+            }
+
+            function load_district(div) {
+                ajaxcall();
+                $('#district').dropdown('restore defaults');
+                $('#upazila').dropdown('restore defaults');
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (div.length == 0) {
+                    $('#district').html("<option value=\"\">District</option>");
+                    $('#upazila').html("<option value=\"\">Upazila</option>");
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getDistricts/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'div': JSON.stringify(div)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">District</option>";
+                            for (i = 0; i < result.length; i++) {
+
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#district').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_upazila(dist) {
+                ajaxcall();
+                $('#upazila').dropdown('restore defaults');
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (dist.length == 0) {
+                    $('#upazila').html("<option value=\"\">Upazila</option>");
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getUpazilas/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'dist': JSON.stringify(dist)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Upazila</option>";
+                            for (i = 0; i < result.length; i++) {
+
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#upazila').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_union(upz) {
+                ajaxcall();
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (upz.length == 0) {
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getUnions/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'upz': JSON.stringify(upz)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Union</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#union').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+
+            function load_block(union) {
+                ajaxcall();
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (union.length == 0) {
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getBlocks/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'union': JSON.stringify(union)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Block</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#block').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_name(block) {
+                ajaxcall();
+                $('#saoo_name').dropdown('restore defaults');
+                if (block.length == 0) {
+                    $('#saoo_name').html("<option value=\"\">SAOO Name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getNames/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'block': JSON.stringify(block)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">SAOO Name</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].sender_id + "\"> " + result[i].sender_name + "</option>";
+                            }
+                            $('#saoo_name').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function value_filter(some) {
+                return some.slice(0, some.length - 1);
+            }
+
+            function precisionRound(number, precision) {
+                var factor = Math.pow(10, precision);
+                return Math.round(number * factor) / factor;
+            }
+
+
+            function ajaxcall() {
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        function getCookie(name) {
+                            var cookieValue = null;
+                            if (document.cookie && document.cookie != '') {
+                                var cookies = document.cookie.split(';');
+                                for (var i = 0; i < cookies.length; i++) {
+                                    var cookie = jQuery.trim(cookies[i]);
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+
+                        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                            // Only send the token to relative URLs i.e. locally.
+                            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                        }
+                    }
+                });
+            }
+        });
+
+
+        // Setup - add a text input to each footer cell
+        {#        $('<input  type="text" placeholder="Visit Date" />')#}
+        {#                                .datepicker({#}
+        {##}
+        {#                                    format: 'yyyy/mm/dd',#}
+        {#                                    todayHighlight: true#}
+        {#                                })#}
+        {#                                .appendTo($(column.header()).empty())#}
+        {##}
+        {#                                .on('changeDate', function () {#}
+        {##}
+        {#                                    $(this).datepicker('hide');#}
+        {#                                    column.search($(this).val()).draw();#}
+        {##}
+        {#                                })#}
+        {#                                .on('change', function () {#}
+        {#                                    var val = $.fn.dataTable.util.escapeRegex(#}
+        {#                                        $(this).val()#}
+        {#                                    );#}
+        {#                                    column.search(val ? '^' + val + '$' : '', true, false)#}
+        {#                                        .draw();#}
+        {#                                });#}
+
+
+    </script>
+{% endblock %}

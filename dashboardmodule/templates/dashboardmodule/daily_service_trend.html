@@ -1,0 +1,835 @@
+{% extends 'base_test.html' %}
+{% load i18n %}
+{% load app_filters %}
+{% block additional-headers %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/project_dashboard_style.css" type="text/css"/>
+    {#    <link href="/static/css/datepicker.css" rel="stylesheet">#}
+    {#    <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css"#}
+    {#          rel="stylesheet" type="text/css"/>#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+    <link href="/static/css/calendar.min.css" rel="stylesheet" type="text/css"/>
+
+    <head>
+        <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    </head>
+    <style>
+        .ui.labeled.icon.button
+        {
+            width:121px;
+        }
+
+
+    @media only screen and (max-width: 1030px) {
+
+            .ui.labeled.icon.button {
+                width: 125% ;
+{#                padding-right: 0.5em !important;#}
+            }
+
+        }
+
+        @media only screen and (max-width: 986px) {
+
+            .ui.labeled.icon.button {
+                width:100%;
+                margin-top: 1em !important;
+
+            }
+
+        }
+
+        @media only screen and (max-width: 1270px) {
+            div.div_size
+            {
+                width:30%;
+            }
+
+        }
+
+        div.div_size {
+            width: 191px;
+            display: inline-grid;
+            margin: 0 2px 0 2px;
+        }
+
+
+
+
+
+    </style>
+
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption"><i class="fa fa-adn"></i>Daily SAAO Service Trend</div>
+        </div>
+
+        <div class="portlet-body">
+
+            <div class="row" style="margin-right: -15px;margin-left: 10px;">
+
+                <div class="div_size">
+                    <div class="dashboard-stat tile-red" style="min-height: 120px; ">
+                        <div class="visual">
+                            <i class="fa fa-wpforms" ></i>
+                        </div>
+                        <div class="details">
+                            <div class="number" id="farmer_count"><span class="count">{{ farmer_count|safe }}</span></div>
+                            <div class="desc">Farmer</div>
+
+                        </div>
+                        <a class="more" href="javascript:;">
+                        </a>
+                    </div>
+                </div>
+                <div class="div_size">
+                    <div class="dashboard-stat tile-turquoise" style="min-height: 120px;">
+                        <div class="visual">
+                            <i class="fa fa-connectdevelop"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number count" id="agro_count"><span class="count">{{ agro_count|safe }}</span></div>
+                            <div class="desc">Agro Bussiness</div>
+
+                        </div>
+                        <a class="more" href="javascript:;">
+                        </a>
+                    </div>
+                </div>
+                <div class="div_size">
+                    <div class="dashboard-stat tile-purple" style="min-height: 120px;">
+                        <div class="visual">
+                            <i class="fa fa-"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number count" id="agro_leader_count"><span class="count">{{ agro_leader_count|safe }}</span></div>
+                            <div class="desc">Agricultural Professionals & Local Leader</div>
+
+                        </div>
+                        <a class="more" href="javascript:;">
+                        </a>
+                    </div>
+                </div>
+                <div class="div_size">
+                    <div class="dashboard-stat tile-blue" style="min-height: 120px;">
+                        <div class="visual">
+                            <i class="fa fa-male"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number" ><span class="count" id="male_count">{{ male_count|safe }}</span>%</div>
+                            <div class="desc">Male</div>
+
+                        </div>
+                        <a class="more" href="javascript:;">
+                            {#                    View more <i class="m-icon-swapright m-icon-white"></i>#}
+                        </a>
+                    </div>
+                </div>
+                <div class="div_size">
+                    <div class="dashboard-stat light-green-madison" style="min-height: 120px;">
+                        <div class="visual">
+                            <i class="fa fa-female"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number" ><span class="count" id="female_count">{{ female_count|safe }}</span>%</div>
+                            <div class="desc">Female</div>
+
+                        </div>
+                        <a class="more" href="javascript:;">
+                            {#                    View more <i class="m-icon-swapright m-icon-white"></i>#}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui grid stackable">
+                <div class="row">
+
+                    <div class="eleven wide column" style="padding-top:.5%; padding-left: 3%; padding-right: 0px;">
+                        <br>
+                        <div id="container"></div>
+                    </div>
+                    <div class="five wide column ">
+
+                        <div class="ui form">
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Start date</label>
+                                    <div class="ui calendar" id="rangestart">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" placeholder="Start">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>End date</label>
+                                    <div class="ui calendar" id="rangeend">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Division</label>
+                                    <select name="division" class="ui fluid  search selection dropdown icon" multiple=""
+                                            id="division">
+                                        <option value="">Division</option>
+                                        {% for div_id,div_name in division %}
+                                            <option value="{{ div_id }}">{{ div_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>District</label>
+                                    <select name="district" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="district" id="select">
+                                        <option value="">District</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Upazila</label>
+                                    <select name="upazila" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="upazila">
+                                        <option value="">Upazila</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Union</label>
+                                    <select name="union" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="union">
+                                        <option value="">Union</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>Block</label>
+                                    <select name="block" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="block">
+                                        <option value="">Block</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="one fields">
+                                <div class="field sixteen wide column">
+                                    <label>SAOO Name</label>
+                                    <select name="saoo_name" class="ui fluid search selection dropdown icon" multiple=""
+                                            id="saoo_name">
+                                        <option value="">SAOO Name</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row" >
+                                <div class="col-md-6 ">
+                                    <button class="ui labeled icon button" id="search">
+                                        <i class="search blue icon"></i>
+                                        Search
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <form method="post"
+                                          action="/dashboardmodule/xls_report_creator_for_dst/"
+                                          enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div id="divisions" hidden></div>
+                                        <div id="districts" hidden></div>
+                                        <div id="upazilas" hidden></div>
+                                        <div id="unions" hidden></div>
+                                        <div id="blocks" hidden></div>
+                                        <div id="saoo_names" hidden></div>
+                                        <div id="startdate" hidden></div>
+                                        <div id="enddate" hidden></div>
+
+                                        <button type="submit" class="ui labeled icon  button" data-original-title=""
+                                                title="" id="export"><i class="cloud download blue icon"></i>
+                                            Export
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block additional-javascript %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+    {#    <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>#}
+    <script type="text/javascript" src="/static/js/calendar.min.js"></script>
+    {#    <script type="text/javascript" src="/static/js/bootstrap-datepicker.js"></script>#}
+    <script>
+
+
+        $(document).ready(function () {
+
+            function counting() {
+                $('.count').each(function () {
+                    console.log($(this).text());
+                    $(this).prop('Counter', 0).animate({
+                        Counter: $(this).text()
+                    }, {
+                        duration: 2000,
+                        easing: 'swing',
+                        step: function (now) {
+                            $(this).text(Math.ceil(now));
+                        }
+                    });
+                });
+                {
+                    $('.count').removeClass('count').addClass('counted');
+                }
+                ;
+            }
+
+            counting();
+
+
+            $('#division').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_district(value);
+                    }
+                }
+            );
+            $('#district').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_upazila(value);
+                    }
+                }
+            );
+            $('#upazila').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+                        load_union(value);
+                    }
+                }
+            );
+            $('#union').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+{#                        load_block(value);#}
+                        load_name(value);
+                    }
+                }
+            );
+            $('#block').dropdown(
+                {
+                    onChange: function (value, text, $selectedItem) {
+{#                        load_name(value);#}
+                    }
+                }
+            );
+            $('#saoo_name').dropdown();
+
+
+            var today = new Date();
+            $('#rangestart').calendar({type: 'date', endCalendar: $('#rangeend')});
+            $('#rangestart').calendar("set date", new Date(today.getFullYear(), today.getMonth() - 1, today.getDate()));
+            $('#rangeend').calendar({type: 'date', startCalendar: $('#rangestart')});
+            $('#rangeend').calendar("set date", new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
+            $('#search').on("click", function () {
+                var division = value_filter($('#division').dropdown('get value'));
+                var district = value_filter($('#district').dropdown('get value'));
+                var upazila = value_filter($('#upazila').dropdown('get value'));
+                var union = value_filter($('#union').dropdown('get value'));
+                var block = value_filter($('#block').dropdown('get value'));
+                var saoo_name = value_filter($('#saoo_name').dropdown('get value'));
+                var startdate = $('#rangestart').calendar("get date");
+                var enddate = $('#rangeend').calendar("get date");
+
+                startdate = getFormattedDate(startdate);
+                enddate = getFormattedDate(enddate);
+
+
+                $.ajax({
+                    url: '/dashboardmodule/data_filter_DST/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'division': JSON.stringify(division),
+                        'district': JSON.stringify(district),
+                        'upazila': JSON.stringify(upazila),
+                        'union': JSON.stringify(union),
+                        'block': JSON.stringify(block),
+                        'saoo_name': JSON.stringify(saoo_name),
+                        'startdate': startdate,
+                        'enddate': enddate
+                    },
+                    beforeSend: function () {
+                        {#                    $("#container").html('<div class="alert alert-success">Please Wait...loading....</div>');#}
+                        $("#container").html('<div class="ui active inverted dimmer">\n' +
+                            '    <div class="ui text loader">Loading</div>\n' +
+                            '  </div>');
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        bar_chart(JSON.parse(result['categories']), result['name'], result['data']);
+                        $('#farmer_count').text(result['farmer_count']);
+
+
+                        $('#agro_count').text(result['agro_count']);
+
+                        $('#agro_leader_count').text(result['agro_leader_count']);
+                        $('#female_count').text(result['female_count']);
+                        $('#male_count').text(result['male_count']);
+                        $('#farmer_count').addClass('count');
+                        $('#agro_count').addClass('count');
+                        $('#agro_leader_count').addClass('count');
+                        $('#female_count').addClass('count');
+                        $('#male_count').addClass('count');
+
+                        counting();
+
+                    }
+                });
+
+
+            });
+
+            $('#export').on("click", function () {
+                var division = value_filter($('#division').dropdown('get value'));
+                var district = value_filter($('#district').dropdown('get value'));
+                var upazila = value_filter($('#upazila').dropdown('get value'));
+                var union = value_filter($('#union').dropdown('get value'));
+                var block = value_filter($('#block').dropdown('get value'));
+                var saoo_name = value_filter($('#saoo_name').dropdown('get value'));
+                var startdate = $('#rangestart').calendar("get date");
+                var enddate = $('#rangeend').calendar("get date");
+                startdate = getFormattedDate(startdate);
+                enddate = getFormattedDate(enddate);
+                for (each in division)
+                    $('#divisions').append("<input name = \"divisions\" value=\"" + division[each] + "\" />");
+                for (each in district)
+                    $('#districts').append("<input name = \"districts\" value=\"" + district[each] + "\" />");
+                for (each in upazila)
+                    $('#upazilas').append("<input name = \"upazilas\" value=\"" + upazila[each] + "\" />");
+                for (each in union)
+                    $('#unions').append("<input name = \"unions\" value=\"" + union[each] + "\" />");
+                for (each in block)
+                    $('#blocks').append("<input name = \"blocks\" value=\"" + block[each] + "\" />");
+                for (each in saoo_name)
+                    $('#saoo_names').append("<input name = \"saoo_names\" value=\"" + saoo_name[each] + "\" />");
+                $('#startdate').html("<input name = \"startdate\" value=\"" + startdate + "\" />");
+                $('#enddate').html("<input name = \"enddate\" value=\"" + enddate + "\" />");
+            });
+
+
+            var categories = {{ categories |safe }};
+            var names = {{ name |safe }};
+            var data = {{ data |safe }};
+            var months = [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ];
+
+            bar_chart(categories, names, data);
+
+            function bar_chart(categories, names, data) {
+                console.log(categories)
+                var step = Math.round(categories.length / 4);
+                var res = []
+                for (i = 0, s = 0; i < categories.length; i += 81, s++) {
+                    res[i] = categories[i];
+                }
+                console.log(res);
+                console.log(step);
+                var series = [];
+                for (i = 0; i < data.length; i++)
+                    series.push({'name': names[i], 'data': data[i]});
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Daily SAAO Service Trend'
+                    },
+                    xAxis: {
+
+
+                        labels: {
+                            style: {
+                                fontWeight: 'bold',
+                            },
+                            formatter: function () {
+                                var date = new Date(this.value);
+                                return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear().toString().substring(2, 4);
+                            }
+                        },
+
+                        categories: categories,
+                        tickPositioner: function () {
+                            var positions = [],
+                                tick = Math.floor(this.dataMin);
+
+                            while (tick < this.dataMax) {
+
+                                positions.push(tick);
+
+                                tick += step;
+                            }
+
+                            positions.push(this.dataMax - 1);
+
+                            return positions;
+                        },
+
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Cases'
+                        }
+                    },
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'bottom',
+                        layout: 'horizontal'
+                    },
+
+                    plotOptions: {
+                        series: {
+                            events: {
+                                legendItemClick: function (event) {
+                                    var seriesIndex = this.index;
+                                    var series = this.chart.series;
+
+                                    for (var i = 0; i < series.length; i++) {
+                                        if (series[i].index != seriesIndex) {
+
+                                            series[i].hide();
+                                        }
+                                        else series[i].show();
+
+                                    }
+                                    return false;
+
+                                }
+                            }
+                        }
+
+
+                    },
+
+                    series: series,
+
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                width: 400
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+
+                });
+            }
+
+
+            function getDesiredDate(n) {
+
+                var today = new Date();
+                var n_month_before_today = new Date(today);
+                n_month_before_today.setMonth((today.getMonth() + 1) - n);
+                var dd = n_month_before_today.getDate();
+                var mm = n_month_before_today.getMonth() + 1;
+
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                var yyyy = n_month_before_today.getFullYear();
+                {#                formatted_date = yyyy + '-' + mm + '-' + dd;#}
+                formatted_date = dd + '/' + mm + '/' + yyyy;
+                return formatted_date;
+
+            }
+
+            var init_from_date = getDesiredDate(2);
+            var init_to_date = getDesiredDate(1);
+            console.log(init_from_date);
+            console.log(init_to_date);
+
+            function load_district(div) {
+                ajaxcall();
+                $('#district').dropdown('restore defaults');
+                $('#upazila').dropdown('restore defaults');
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (div.length == 0) {
+                    $('#district').html("<option value=\"\">District</option>");
+                    $('#upazila').html("<option value=\"\">Upazila</option>");
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getDistricts/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'div': JSON.stringify(div)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">District</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#district').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_upazila(dist) {
+                ajaxcall();
+                $('#upazila').dropdown('restore defaults');
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (dist.length == 0) {
+                    $('#upazila').html("<option value=\"\">Upazila</option>");
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getUpazilas/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'dist': JSON.stringify(dist)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Upazila</option>";
+                            for (i = 0; i < result.length; i++) {
+
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#upazila').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_union(upz) {
+                ajaxcall();
+                $('#union').dropdown('restore defaults');
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (upz.length == 0) {
+                    $('#union').html("<option value=\"\">Union</option>");
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getUnions/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'upz': JSON.stringify(upz)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Union</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#union').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+
+            function load_block(union) {
+                ajaxcall();
+                $('#block').dropdown('restore defaults');
+                $('#saoo_name').dropdown('restore defaults');
+                if (union.length == 0) {
+                    $('#block').html("<option value=\"\">Block</option>");
+                    $('#saoo_name').html("<option value=\"\">Saoo_name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getBlocks/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'union': JSON.stringify(union)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">Block</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].id + "\"> " + result[i].field_name + "</option>";
+                            }
+                            $('#block').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function load_name(block) {
+                ajaxcall();
+                $('#saoo_name').dropdown('restore defaults');
+                if (block.length == 0) {
+                    $('#saoo_name').html("<option value=\"\">SAOO Name</option>");
+                }
+                else {
+                    $.ajax({
+                        url: '/dashboardmodule/getNames/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'block': JSON.stringify(block)},
+                        success: function (result) {
+                            console.log(result);
+                            var html_code = "<option value=\"\">SAOO Name</option>";
+                            for (i = 0; i < result.length; i++) {
+                                html_code += "<option value=\"" + result[i].sender_id + "\"> " + result[i].sender_name + "</option>";
+                            }
+                            $('#saoo_name').html(html_code);
+
+                        }
+                    });
+                }
+            }
+
+            function ajaxcall() {
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        function getCookie(name) {
+                            var cookieValue = null;
+                            if (document.cookie && document.cookie != '') {
+                                var cookies = document.cookie.split(';');
+                                for (var i = 0; i < cookies.length; i++) {
+                                    var cookie = jQuery.trim(cookies[i]);
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+
+                        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                            // Only send the token to relative URLs i.e. locally.
+                            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                        }
+                    }
+                });
+            }
+
+            function getFormattedDate(date) {
+                var yy = date.getFullYear();
+                var mm = date.getMonth() + 1;
+                var dd = date.getDate();
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                {#                formatted_date = yyyy + '-' + mm + '-' + dd;#}
+                formatted_date = yy + '-' + mm + '-' + dd;
+                return formatted_date;
+            }
+
+
+            function value_filter(some) {
+                return some.slice(0, some.length - 1);
+            }
+
+
+        });
+
+
+        // Setup - add a text input to each footer cell
+        {#        $('<input  type="text" placeholder="Visit Date" />')#}
+        {#                                .datepicker({#}
+        {##}
+        {#                                    format: 'yyyy/mm/dd',#}
+        {#                                    todayHighlight: true#}
+        {#                                })#}
+        {#                                .appendTo($(column.header()).empty())#}
+        {##}
+        {#                                .on('changeDate', function () {#}
+        {##}
+        {#                                    $(this).datepicker('hide');#}
+        {#                                    column.search($(this).val()).draw();#}
+        {##}
+        {#                                })#}
+        {#                                .on('change', function () {#}
+        {#                                    var val = $.fn.dataTable.util.escapeRegex(#}
+        {#                                        $(this).val()#}
+        {#                                    );#}
+        {#                                    column.search(val ? '^' + val + '$' : '', true, false)#}
+        {#                                        .draw();#}
+        {#                                });#}
+
+
+    </script>
+{% endblock %}
